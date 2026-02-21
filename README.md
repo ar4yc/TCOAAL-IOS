@@ -1,2 +1,2 @@
 # TCOAAL-IOS
-Ready zip archive with decrypted tcoaal version for RPGMaker (not ipa)
+Ready-made zip archive with tcoaal for RPGPlayer emulator (not ipa)
