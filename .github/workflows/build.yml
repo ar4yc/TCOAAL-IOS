@@ -1,20 +1,17 @@
 name: Mobile Manual Build
 
 on:
-  workflow_dispatch: # Это создает ту самую кнопку
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-15
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Run Build Script
-        run: |
-          echo "Начинаю сборку версии 0.7.2..."
-          # Здесь в будущем будут твои команды для упаковки игры
-          # Например: zip -r TCOAAL_IOS.zip . 
+        run:
           
       - name: Status
         run: echo "Сборка завершена успешно!"
