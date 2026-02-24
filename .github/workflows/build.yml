@@ -2,18 +2,18 @@ name: Build
 on: [push, workflow_dispatch]
 jobs:
   ios:
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Set Xcode Version
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
       - run: |
           npm install @capacitor/core @capacitor/cli @capacitor/ios
           echo '{"appId":"com.ar4yc.tcoaal","appName":"TCOAAL","webDir":"www"}' > capacitor.config.json
           npx cap add ios || true
-          
-          # Настраиваем Podfile правильно для Cap 7
           cat <<EOF > ios/App/Podfile
           platform :ios, '15.0'
           use_frameworks!
@@ -22,23 +22,12 @@ jobs:
             pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
           end
           EOF
-          
-          # Фиксим таргет везде
           find ios -name "project.pbxproj" -exec sed -i '' 's/13.0/15.0/g' {} +
-          
-          # Установка подов из правильной папки
           cd ios/App && pod install --repo-update
-          
-          # Сборка
-          cd ../../
-          npx cap copy ios
-          xcodebuild archive -workspace ios/App/App.xcworkspace -scheme App -configuration Debug -destination 'generic/platform=iOS' -archivePath App.xcarchive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" AD_HOC_CODE_SIGNING_ALLOWED=YES
-          
-          # Пакет
-          mkdir Payload
-          cp -r App.xcarchive/Products/Applications/App.app Payload/
+          cd ../../ && npx cap copy ios
+          xcodebuild archive -workspace ios/App/App.xcworkspace -scheme App -configuration Debug -destination 'generic/platform=iOS' -archivePath App.xcarchive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" AD_HOC_CODE_SIGNING_ALLOWED=YES SWIFT_COMPILATION_MODE=wholemodule
+          mkdir Payload && cp -r App.xcarchive/Products/Applications/App.app Payload/
           zip -r TCOAAL.ipa Payload
-          
       - uses: actions/upload-artifact@v4
         with:
           name: TCOAAL-IPA
