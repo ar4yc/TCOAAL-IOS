@@ -13,10 +13,9 @@ jobs:
           echo '{"appId":"com.ar4yc.tcoaal","appName":"TCOAAL","webDir":"www"}' > capacitor.config.json
           npx cap add ios || true
           
-          # Перезаписываем Podfile с явным указанием проекта
-          cat <<EOF > ios/App/App/Podfile
+          # Настраиваем Podfile правильно для Cap 7
+          cat <<EOF > ios/App/Podfile
           platform :ios, '15.0'
-          project 'App.xcodeproj'
           use_frameworks!
           target 'App' do
             pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
@@ -24,18 +23,20 @@ jobs:
           end
           EOF
           
-          # Принудительно меняем версию во ВСЕХ файлах проекта
+          # Фиксим таргет везде
           find ios -name "project.pbxproj" -exec sed -i '' 's/13.0/15.0/g' {} +
           
-          # Установка
-          cd ios/App/App && pod install --repo-update
-          cd ../../../ && npx cap copy ios
+          # Установка подов из правильной папки
+          cd ios/App && pod install --repo-update
           
           # Сборка
+          cd ../../
+          npx cap copy ios
           xcodebuild archive -workspace ios/App/App.xcworkspace -scheme App -configuration Debug -destination 'generic/platform=iOS' -archivePath App.xcarchive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" AD_HOC_CODE_SIGNING_ALLOWED=YES
           
-          # Упаковка
-          mkdir Payload && cp -r App.xcarchive/Products/Applications/App.app Payload/
+          # Пакет
+          mkdir Payload
+          cp -r App.xcarchive/Products/Applications/App.app Payload/
           zip -r TCOAAL.ipa Payload
           
       - uses: actions/upload-artifact@v4
