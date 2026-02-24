@@ -15,23 +15,21 @@ jobs:
       - name: Install Capacitor
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/ios
-          # Создаем базовый конфиг программно, чтобы не тупил
-          cat <<EOF > capacitor.config.json
-          {
-            "appId": "com.ar4yc.tcoaal",
-            "appName": "TCOAAL",
-            "webDir": "www",
-            "bundledWebRuntime": false
-          }
-          EOF
+          echo '{"appId":"com.ar4yc.tcoaal","appName":"TCOAAL","webDir":"www"}' > capacitor.config.json
 
-      - name: Initialize iOS Platform
+      - name: Add iOS Platform
         run: |
           npx cap add ios
-          npx cap sync ios
+          
+      - name: Force iOS 14.0 Target
+        run: |
+          # Меняем версию iOS в самом проекте, чтобы Pods не ругались
+          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 13.0/IPHONEOS_DEPLOYMENT_TARGET = 14.0/g' ios/App/App.xcodeproj/project.pbxproj
+          # Также правим Podfile
+          sed -i '' "s/platform :ios, '13.0'/platform :ios, '14.0'/g" ios/App/App/Podfile
 
-      - name: List Xcode Projects (Debug)
-        run: ls -R ios/App/
+      - name: Sync and Install Pods
+        run: npx cap sync ios
 
       - name: Build Xcode Project
         run: |
@@ -43,8 +41,7 @@ jobs:
             -archivePath App.xcarchive \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY="" \
-            AD_HOC_CODE_SIGNING_ALLOWED=YES
+            CODE_SIGN_IDENTITY=""
 
       - name: Create Unsigned IPA
         run: |
