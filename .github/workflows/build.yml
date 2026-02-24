@@ -1,59 +1,32 @@
-name: Build Unsigned IPA
+name: Build
 on: [push, workflow_dispatch]
-
 jobs:
-  build:
+  ios:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: Install Capacitor
-        run: |
+      - run: |
           npm install @capacitor/core @capacitor/cli @capacitor/ios
           echo '{"appId":"com.ar4yc.tcoaal","appName":"TCOAAL","webDir":"www"}' > capacitor.config.json
-
-      - name: Add iOS Platform (Ignore Initial Error)
-        run: |
-          # Пытаемся добавить, если упадет на подах - не страшно, идем дальше
           npx cap add ios || true
-          
-      - name: Force iOS 15.0 Target
-        run: |
-          # Ищем файлы и меняем версию принудительно во всех местах
-          find ios -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 13.0/IPHONEOS_DEPLOYMENT_TARGET = 15.0/g' {} +
-          find ios -name "Podfile" -exec sed -i '' "s/platform :ios, '13.0'/platform :ios, '15.0'/g" {} +
-
-      - name: Clean Sync and Pod Install
-        run: |
-          # Теперь делаем чистый синк с установкой подов
-          npx cap sync ios
-
-      - name: Build Xcode Project
-        run: |
-          xcodebuild archive \
-            -workspace ios/App/App.xcworkspace \
-            -scheme App \
-            -configuration Debug \
-            -destination 'generic/platform=iOS' \
-            -archivePath App.xcarchive \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY="" \
-            AD_HOC_CODE_SIGNING_ALLOWED=YES
-
-      - name: Create Unsigned IPA
-        run: |
-          mkdir Payload
-          cp -r App.xcarchive/Products/Applications/App.app Payload/
-          zip -r TCOAAL_Unsigned.ipa Payload
-          
-      - name: Upload Result
-        uses: actions/upload-artifact@v4
+          cat <<EOF > ios/App/App/Podfile
+          platform :ios, '15.0'
+          use_frameworks!
+          target 'App' do
+            pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
+            pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
+          end
+          EOF
+          find ios -name "project.pbxproj" -exec sed -i '' 's/13.0/15.0/g' {} +
+          cd ios/App/App && pod install --repo-update
+          cd ../../../ && npx cap copy ios
+          xcodebuild archive -workspace ios/App/App.xcworkspace -scheme App -configuration Debug -destination 'generic/platform=iOS' -archivePath App.xcarchive CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" AD_HOC_CODE_SIGNING_ALLOWED=YES
+          mkdir Payload && cp -r App.xcarchive/Products/Applications/App.app Payload/
+          zip -r TCOAAL.ipa Payload
+      - uses: actions/upload-artifact@v4
         with:
-          name: ios-ipa
-          path: TCOAAL_Unsigned.ipa
+          name: TCOAAL-IPA
+          path: TCOAAL.ipa
