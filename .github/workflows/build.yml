@@ -1,5 +1,5 @@
 name: Build Unsigned IPA
-on: [push]
+on: [push, workflow_dispatch]
 
 jobs:
   build:
@@ -12,19 +12,29 @@ jobs:
         with:
           node-version: 20
 
-      - name: Initialize Project
+      - name: Install Capacitor
         run: |
-          echo '{"name": "tcoaal-mobile", "version": "1.0.0"}' > package.json
           npm install @capacitor/core @capacitor/cli @capacitor/ios
-          
-         
-          npx cap init "TCOAAL" "com.testicpon.tcoaal" --web-dir www
-          
+          # Создаем базовый конфиг программно, чтобы не тупил
+          cat <<EOF > capacitor.config.json
+          {
+            "appId": "com.ar4yc.tcoaal",
+            "appName": "TCOAAL",
+            "webDir": "www",
+            "bundledWebRuntime": false
+          }
+          EOF
+
+      - name: Initialize iOS Platform
+        run: |
           npx cap add ios
+          npx cap sync ios
+
+      - name: List Xcode Projects (Debug)
+        run: ls -R ios/App/
 
       - name: Build Xcode Project
         run: |
-          npx cap sync ios
           xcodebuild archive \
             -workspace ios/App/App.xcworkspace \
             -scheme App \
@@ -33,7 +43,8 @@ jobs:
             -archivePath App.xcarchive \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY=""
+            CODE_SIGN_IDENTITY="" \
+            AD_HOC_CODE_SIGNING_ALLOWED=YES
 
       - name: Create Unsigned IPA
         run: |
