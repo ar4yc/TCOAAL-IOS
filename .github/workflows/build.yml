@@ -17,20 +17,20 @@ jobs:
           npm install @capacitor/core @capacitor/cli @capacitor/ios
           echo '{"appId":"com.ar4yc.tcoaal","appName":"TCOAAL","webDir":"www"}' > capacitor.config.json
 
-      - name: Add iOS Platform (No Sync)
+      - name: Add iOS Platform (Ignore Initial Error)
         run: |
-          # Флаг --no-sync запрещает запуск pod install на этом этапе
-          npx cap add ios --no-sync
+          # Пытаемся добавить, если упадет на подах - не страшно, идем дальше
+          npx cap add ios || true
           
       - name: Force iOS 15.0 Target
         run: |
-          # Ставим 15.0 для верности, Capacitor 7 это любит
-          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 13.0/IPHONEOS_DEPLOYMENT_TARGET = 15.0/g' ios/App/App.xcodeproj/project.pbxproj
-          sed -i '' "s/platform :ios, '13.0'/platform :ios, '15.0'/g" ios/App/App/Podfile
+          # Ищем файлы и меняем версию принудительно во всех местах
+          find ios -name "project.pbxproj" -exec sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 13.0/IPHONEOS_DEPLOYMENT_TARGET = 15.0/g' {} +
+          find ios -name "Podfile" -exec sed -i '' "s/platform :ios, '13.0'/platform :ios, '15.0'/g" {} +
 
-      - name: Sync and Install Pods
+      - name: Clean Sync and Pod Install
         run: |
-          # Теперь, когда версия исправлена, запускаем синхронизацию
+          # Теперь делаем чистый синк с установкой подов
           npx cap sync ios
 
       - name: Build Xcode Project
