@@ -17,19 +17,21 @@ jobs:
           npm install @capacitor/core @capacitor/cli @capacitor/ios
           echo '{"appId":"com.ar4yc.tcoaal","appName":"TCOAAL","webDir":"www"}' > capacitor.config.json
 
-      - name: Add iOS Platform
+      - name: Add iOS Platform (No Sync)
         run: |
-          npx cap add ios
+          # Флаг --no-sync запрещает запуск pod install на этом этапе
+          npx cap add ios --no-sync
           
-      - name: Force iOS 14.0 Target
+      - name: Force iOS 15.0 Target
         run: |
-          # Меняем версию iOS в самом проекте, чтобы Pods не ругались
-          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 13.0/IPHONEOS_DEPLOYMENT_TARGET = 14.0/g' ios/App/App.xcodeproj/project.pbxproj
-          # Также правим Podfile
-          sed -i '' "s/platform :ios, '13.0'/platform :ios, '14.0'/g" ios/App/App/Podfile
+          # Ставим 15.0 для верности, Capacitor 7 это любит
+          sed -i '' 's/IPHONEOS_DEPLOYMENT_TARGET = 13.0/IPHONEOS_DEPLOYMENT_TARGET = 15.0/g' ios/App/App.xcodeproj/project.pbxproj
+          sed -i '' "s/platform :ios, '13.0'/platform :ios, '15.0'/g" ios/App/App/Podfile
 
       - name: Sync and Install Pods
-        run: npx cap sync ios
+        run: |
+          # Теперь, когда версия исправлена, запускаем синхронизацию
+          npx cap sync ios
 
       - name: Build Xcode Project
         run: |
@@ -41,7 +43,8 @@ jobs:
             -archivePath App.xcarchive \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
-            CODE_SIGN_IDENTITY=""
+            CODE_SIGN_IDENTITY="" \
+            AD_HOC_CODE_SIGNING_ALLOWED=YES
 
       - name: Create Unsigned IPA
         run: |
