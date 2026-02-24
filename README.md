@@ -1,4 +1,4 @@
-# The Coffin of Andy and Leyley on IOS
+# The Coffin of Andy and Leyley on IOS (Using RPGPlayer)
 
 ##### Disclaimer: This is a fan-made iOS adaptation of *The Coffin of Andy and Leyley*, modified to run on RPG Maker MV/MZ emulators for iOS devices. I do not claim ownership of the original game, its story, characters, or assets. All original content remains © the original creators. This release is non-commercial and intended for personal, educational, or testing purposes only.
 
