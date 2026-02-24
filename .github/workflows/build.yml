@@ -1,18 +1,48 @@
-name: Mobile Manual Build
-
-on:
-  workflow_dispatch:
+name: Build Unsigned IPA
+on: [push]
 
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: macos-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Run Build Script
-        run:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Initialize Project
+        run: |
+          echo '{"name": "tcoaal-mobile", "version": "1.0.0"}' > package.json
+          npm install @capacitor/core @capacitor/cli @capacitor/ios
           
-      - name: Status
-        run: echo "Сборка завершена успешно!"
+         
+          npx cap init "TCOAAL" "com.testicpon.tcoaal" --web-dir www
+          
+          npx cap add ios
 
+      - name: Build Xcode Project
+        run: |
+          npx cap sync ios
+          xcodebuild archive \
+            -workspace ios/App/App.xcworkspace \
+            -scheme App \
+            -configuration Debug \
+            -destination 'generic/platform=iOS' \
+            -archivePath App.xcarchive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
+
+      - name: Create Unsigned IPA
+        run: |
+          mkdir Payload
+          cp -r App.xcarchive/Products/Applications/App.app Payload/
+          zip -r TCOAAL_Unsigned.ipa Payload
+          
+      - name: Upload Result
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-ipa
+          path: TCOAAL_Unsigned.ipa
