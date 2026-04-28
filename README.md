@@ -1,4 +1,6 @@
-# The Coffin of Andy and Leyley on IOS (Using RPGPlayer)
+# This project frozen. ❄️ Sorry! 😕
+
+## The Coffin of Andy and Leyley on IOS (Using RPGPlayer)
 
 ### ⚠️ **LEGAL DISCLAIMER** ⚠️
 
