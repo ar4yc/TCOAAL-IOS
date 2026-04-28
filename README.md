@@ -1,4 +1,4 @@
-# This project is frozen. ❄️ Sorry! 😕
+# This project is frozen. ❄️ Sorry! 😕 (BTW RPGPlayer is shitty - where are updates?)
 
 ## The Coffin of Andy and Leyley on IOS (Using RPGPlayer)
 
