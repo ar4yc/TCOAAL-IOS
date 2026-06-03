@@ -16,16 +16,15 @@ If you do **not** agree to these terms, delete everything immediately and do not
 
 ### Requirements
 * To play, you will **need** an RPG Maker MV/MZ emulator.
-* ##### I used **[RPGPlayer](https://apps.apple.com/us/app/rpgplayer-an-rpgmaker-player/id6754986970?l)**.
+* ##### I used **[RPGPlayer](https://testflight.apple.com/join/PUtwGpnv)**.
 
 ### Installation
 1. **Download:** Go to the [Releases](https://github.com/ar4yc/TCOAAL-IOS/releases) page and grab the latest `.zip` archive.
-2. **Install Emulator:** Search for **RPGPlayer** on the App Store and install it.
+2. **Install Emulator:** Search for **Testflight** on the App Store and install it. Open the [RPGPlayer link](https://testflight.apple.com/join/PUtwGpnv) and add the app to TestFlight, then install it.
 3. **Importing:**
    - Open the RPGPlayer app.
    - Tap the "**Add game**" button.
    - Select the downloaded `.zip` file.
 
 ### Notes
-* This is a beta release – final version will have fixes and improvements.
-* Feedback is welcome – please report bugs or issues via GitHub issues.
+* This is a beta release – final version will have fixes and improvements. (Canceled)
