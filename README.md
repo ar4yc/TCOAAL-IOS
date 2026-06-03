@@ -1,4 +1,4 @@
-## (I lost most of the project files.)
+# 🛑 Canceled - I lost most of the project files.
 
 ## The Coffin of Andy and Leyley on IOS (Using RPGPlayer)
 
@@ -14,11 +14,11 @@ I do **not** own the game, its story, characters, assets, or any related rights.
 
 If you do **not** agree to these terms, delete everything immediately and do not use this project.
 
-## Requirements
+### Requirements
 * To play, you will **need** an RPG Maker MV/MZ emulator.
 * ##### I used **[RPGPlayer](https://apps.apple.com/us/app/rpgplayer-an-rpgmaker-player/id6754986970?l)**.
 
-## Installation
+### Installation
 1. **Download:** Go to the [Releases](https://github.com/ar4yc/TCOAAL-IOS/releases) page and grab the latest `.zip` archive.
 2. **Install Emulator:** Search for **RPGPlayer** on the App Store and install it.
 3. **Importing:**
@@ -26,6 +26,6 @@ If you do **not** agree to these terms, delete everything immediately and do not
    - Tap the "**Add game**" button.
    - Select the downloaded `.zip` file.
 
-## Notes
+### Notes
 * This is a beta release – final version will have fixes and improvements.
 * Feedback is welcome – please report bugs or issues via GitHub issues.
