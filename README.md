@@ -13,7 +13,7 @@
 
 ### Requirements
 * To play, you will **need** an RPG Maker MV/MZ emulator.
-* I used **[RPGPlayer](https://testflight.apple.com/join/PUtwGpnv)**.
+* In my case, I used **[RPGPlayer](https://testflight.apple.com/join/PUtwGpnv)**.
 
 ### Installation
 1. **Download:** Go to the [Releases](https://github.com/ar4yc/TCOAAL-IOS/releases) page and grab the latest `.zip` archive.
