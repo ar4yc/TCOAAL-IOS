@@ -2,6 +2,8 @@
 <h3 align="center">(Using RPGPlayer)</h2>
 
 
+> ## **Honestly, this project is kind of crap. Someone else did it way better, so just use [Tcoaal.app](https://github.com/Kidev-org/TCOAALBrowserLoader) instead.**
+
 > ### **⚠️ LEGAL DISCLAIMER**
 > This is a **fan-made adaptation** of *The Coffin of Andy and Leyley* for running in the **RPGPlayer** emulator on iOS (RPG Maker MV compatible).  
 > I do **not** own the game, its story, characters, assets, or any related rights. All original content © Nemlei / Kit9 Studio.
@@ -25,4 +27,3 @@
 
 ### Notes
 > * This is a beta release – final version will have fixes and improvements.
-> * If you want to play TCOAAL with mods (as this project doesn't currently support mods), you can use https://tcoaal.app/
