@@ -24,4 +24,5 @@
    - Select the downloaded `.zip` file.
 
 ### Notes
-* This is a beta release – final version will have fixes and improvements.
+> * This is a beta release – final version will have fixes and improvements.
+> * If you want to play TCOAAL with mods (as this project doesn't currently support mods), you can use https://tcoaal.app/
